@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "prestart": "eslint .",
     "start": "node app.js"
   },
@@ -25,6 +25,8 @@
   "devDependencies": {
     "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
   }
 }
