@@ -6,7 +6,6 @@
   "scripts": {
     "pretest": "eslint .",
     "test": "mocha",
-    "prestart": "eslint .",
     "start": "node app.js"
   },
   "repository": {
