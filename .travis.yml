@@ -3,7 +3,7 @@ node_js:
   - "8"
   
 addons:
-  ssh_known_hosts: $DEPLOY_REPO_HOST
+  ssh_known_hosts: "$DEPLOY_REPO_HOST"
 
 after_success:
   - git remote add deploy "$DEPLOY_REPO_USER@$DEPLOY_REPO_HOST:$DEPLOY_REPO_PATH"
