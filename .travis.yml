@@ -1,3 +1,10 @@
 language: node_js
 node_js:
   - "8"
+
+after_success:
+  - eval "$(ssh-agent -s)"
+  - chmod 600 .travis/deploy_key.pem
+  - ssh-add .travis/deploy_key.pem
+  - git remote add deploy $DEPLOY_REPO_URI
+  - git push deploy
