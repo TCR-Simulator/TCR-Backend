@@ -1,10 +1,8 @@
 language: node_js
 node_js:
   - "8"
-  
-addons:
-  ssh_known_hosts: "$DEPLOY_REPO_HOST"
 
 after_success:
+  - ssh-keyscan -t $TRAVIS_SSH_KEY_TYPES -H $DEPLOY_REPO_HOST 2>&1 | tee -a ${TRAVIS_HOME}/.ssh/known_hosts
   - git remote add deploy "$DEPLOY_REPO_USER@$DEPLOY_REPO_HOST:$DEPLOY_REPO_PATH"
   - git push deploy master
