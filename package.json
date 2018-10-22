@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "lint": "eslint .",
     "pretest": "eslint .",
     "test": "mocha",
     "start": "node app.js"

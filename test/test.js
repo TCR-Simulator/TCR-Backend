@@ -1,4 +1,3 @@
-/* global after, describe, it */
 const request = require('supertest');
 
 const app = require('../app');
