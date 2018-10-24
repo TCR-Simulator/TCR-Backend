@@ -1,4 +1,4 @@
-import { AgentType, Maintainer, Contributor, User } from './Agent';
+import { AgentType, Maintainer, Contributor, User } from './agents';
 
 export default class Simulation {
   constructor() {

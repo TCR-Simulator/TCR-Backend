@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import Simulation from '../simulator/Simulation';
-import { AgentType, Maintainer, Contributor, User } from '../simulator/Agent';
+import { AgentType, Maintainer, Contributor, User } from '../simulator/agents';
 
 describe('Simulation', () => {
   let simulation = null;
