@@ -1,7 +1,6 @@
 const Web3 = require('web3');
 
 const results = [];
-const contractAbi = [];
 
 const callback = function callback(error, result) {
   if (error) {
@@ -11,9 +10,13 @@ const callback = function callback(error, result) {
   }
 };
 
+function portToAddr(port) {
+  return `http://localhost:${port}`;
+}
+
 export default class TcrConnection {
-  contructor(portNum, contractAddr) {
-    this.web3 = new Web3(new Web3.providers.HttpProvider(portNum));
+  contructor(portNum, contractAddr, contractAbi) {
+    this.web3 = new Web3(new Web3(new Web3.providers.HttpProvider(portToAddr(portNum))));
     if (this.web3.isConnected()) {
       if (!this.web3.isAddress(contractAddr)) {
         throw new Error('Invalid contract address');
