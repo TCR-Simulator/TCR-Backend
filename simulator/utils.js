@@ -9,3 +9,7 @@ export function randomInRange(start, end) {
 export function randomIntInRange(start, end) {
   return Math.floor(randomInRange(start, end));
 }
+
+export function isValidAddress(address) {
+  return address.length === 42 && address.startsWith('0x');
+}

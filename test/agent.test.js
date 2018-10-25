@@ -14,7 +14,7 @@ describe('AgentGroup', () => {
     ]);
   });
 
-  it('does not allow adding invalid or duplicate wallet addresses', () => {
+  it('does not allow adding invalid wallet addresses', () => {
     const attempt = addresses => () => {
       const agentGroup = new AgentGroup(AgentType.MAINTAINER, {}, addresses.length);
       agentGroup.setAddresses(addresses);
@@ -22,11 +22,20 @@ describe('AgentGroup', () => {
 
     expect(attempt(['BAD ADDRESS'])).to.throw(TypeError);
     expect(attempt(['6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo'])).to.throw(TypeError);
+  });
+
+  it('does not allow adding duplicate wallet addresses', () => {
+    const attempt = addresses => () => {
+      const agentGroup = new AgentGroup(AgentType.MAINTAINER, {}, addresses.length);
+      agentGroup.setAddresses(addresses);
+    };
 
     const duplicate = [
       '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
       '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
+      '0xu6i0nm5zukb2mekjlp7ttfjbwt6gha0u8wnbp7da',
+      '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
     ];
-    expect(attempt(duplicate)).to.throw(TypeError);
+    expect(attempt(duplicate)).to.throw(TypeError, 'duplicate');
   });
 });
