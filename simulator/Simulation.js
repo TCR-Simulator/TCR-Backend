@@ -22,9 +22,9 @@ function getPort() {
   return null;
 }
 
-// function restoreCurrentPort() {
-//   currentPort = basePort;
-// }
+function restoreCurrentPort() {
+  currentPort = basePort;
+}
 
 function randomValueHex(len) {
   return crypto
@@ -46,7 +46,6 @@ export default class Simulation {
 
   run() { // eslint-disable-line class-methods-use-this
     const port = getPort();
-    // Remember to restore the current port number when all simulations are done.
     const serverObj = {
       accounts: this.createAccounts(this.agents.length),
       port,
@@ -60,7 +59,11 @@ export default class Simulation {
     const smartContracrAddr = deploySmartContract(port, getMechanismsParam());
     this.tcrConnection = new TcrConnection(getPort(), smartContracrAddr, getContractAbi());
 
-    return new Promise(resolve => setTimeout(resolve, 100));
+    // Do stuff here
+
+    // Clean-up code
+    this.server.close();
+    restoreCurrentPort();
   }
 
   addAgentGroup(agentType, behaviors, population) {
