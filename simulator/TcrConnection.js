@@ -3,9 +3,16 @@ const Web3 = require('web3');
 const contractAbi = [];
 
 export default class TcrConnection {
-  contructor(provider, contractAddr) {
-    this.web3 = new Web3(provider);
-    this.contract = this.web3.eth.contract(contractAbi).at(contractAddr);
+  contructor(portNum, contractAddr) {
+    this.web3 = new Web3(new Web3.providers.HttpProvider(portNum));
+    if (this.web3.isConnected()) {
+      if (!this.web3.isAddress(contractAddr)) {
+        throw new Error('Invalid contract address');
+      }
+      this.contract = this.web3.eth.contract(contractAbi).at(contractAddr);
+    } else {
+      throw new Error('Web3 connection has failed.');
+    }
   }
 
   submit(initiator, submissionQuality) {
