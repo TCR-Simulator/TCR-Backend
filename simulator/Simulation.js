@@ -31,7 +31,7 @@ export default class Simulation {
   }
 
   run() { // eslint-disable-line class-methods-use-this
-    const port = Simulation.getPort();
+    const port = getPort();
     // Remember to restore the current port number when all simulations are done.
     const serverObj = {
       port,
