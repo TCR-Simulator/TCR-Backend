@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import Simulation from '../simulator/Simulation';
-import { AgentType, Maintainer, Contributor, User } from '../simulator/agents';
+import { AgentType } from '../simulator/agents';
 
 describe('Simulation', () => {
   let simulation = null;
@@ -15,41 +15,34 @@ describe('Simulation', () => {
   });
 
   it('has no agents on creation', () => {
-    const { agents } = simulation;
-    expect(agents).to.be.an('array').that.is.empty; // eslint-disable-line no-unused-expressions
+    const { agentGroups } = simulation;
+    expect(agentGroups).to.be.an('array').that.is.empty; // eslint-disable-line no-unused-expressions
   });
 
-  it('can add agent groups with a specified count', () => {
+  it('can add agent groups', () => {
     simulation.addAgentGroup(AgentType.MAINTAINER, { acceptanceLikelihood: 0.5 }, 10);
-    let { agents } = simulation;
-    expect(agents).to.have.lengthOf(10);
+    let { agentGroups } = simulation;
+    expect(agentGroups).to.have.lengthOf(1);
 
     simulation.addAgentGroup(AgentType.CONTRIBUTOR, { submissionQuality: 0.5 }, 20);
-    ({ agents } = simulation);
-    expect(agents).to.have.lengthOf(30);
+    ({ agentGroups } = simulation);
+    expect(agentGroups).to.have.lengthOf(2);
 
     simulation.addAgentGroup(AgentType.USER, {}, 30);
-    ({ agents } = simulation);
-    expect(agents).to.have.lengthOf(60);
+    ({ agentGroups } = simulation);
+    expect(agentGroups).to.have.lengthOf(3);
 
     simulation.addAgentGroup(AgentType.CONTRIBUTOR, { submissionQuality: 0.1 }, 5);
-    ({ agents } = simulation);
-    expect(agents).to.have.lengthOf(65);
-
-    const maintainers = agents.filter(agent => agent instanceof Maintainer);
-    const contributors = agents.filter(agent => agent instanceof Contributor);
-    const users = agents.filter(agent => agent instanceof User);
-    expect(maintainers).to.have.lengthOf(10);
-    expect(contributors).to.have.lengthOf(25);
-    expect(users).to.have.lengthOf(30);
+    ({ agentGroups } = simulation);
+    expect(agentGroups).to.have.lengthOf(4);
   });
 
   it('does not allow adding of unrecognized agent types', () => {
     const attempt = () => simulation.addAgentGroup('SecretAgent', {}, 10);
     expect(attempt).to.throw(TypeError);
 
-    const { agents } = simulation;
-    expect(agents).to.be.empty; // eslint-disable-line no-unused-expressions
+    const { agentGroups } = simulation;
+    expect(agentGroups).to.be.empty; // eslint-disable-line no-unused-expressions
   });
 
   describe('Agents in submission', () => {

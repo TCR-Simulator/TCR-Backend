@@ -1,4 +1,4 @@
-import { AgentType, Maintainer, Contributor, User } from './agents';
+import { AgentGroup } from './agents';
 import TcrConnection from './TcrConnection';
 
 const Ganache = require('ganache-core');
@@ -41,11 +41,11 @@ function deploySmartContract() {}
 
 export default class Simulation {
   constructor() {
-    this.agents = [];
+    this.agentGroups = [];
   }
 
-  static run() {
-    const port = Simulation.getPort();
+  run() { // eslint-disable-line class-methods-use-this
+    const port = getPort();
     // Remember to restore the current port number when all simulations are done.
     const serverObj = {
       accounts: this.createAccounts(this.agents.length),
@@ -60,27 +60,14 @@ export default class Simulation {
     const smartContracrAddr = deploySmartContract(port, getMechanismsParam());
     this.tcrConnection = new TcrConnection(getPort(), smartContracrAddr, getContractAbi());
 
+    // set AgentGroups addresses
+
     return new Promise(resolve => setTimeout(resolve, 100));
   }
 
-  addAgentGroup(agentType, behaviors, count) { // eslint-disable-line
-    for (let i = 0; i < count; i++) {
-      let agent;
-      switch (agentType) {
-        case AgentType.MAINTAINER:
-          agent = new Maintainer();
-          break;
-        case AgentType.CONTRIBUTOR:
-          agent = new Contributor();
-          break;
-        case AgentType.USER:
-          agent = new User();
-          break;
-        default:
-          throw TypeError(`Unrecognized agent type "${agentType}"`);
-      }
-      this.agents.push(agent);
-    }
+  addAgentGroup(agentType, behaviors, population) {
+    const newGroup = new AgentGroup(agentType, behaviors, population);
+    this.agentGroups.push(newGroup);
   }
 
   createAccounts(agentsLength) {
