@@ -1,37 +1,24 @@
-import { AgentType, Maintainer, Contributor, User } from './agents';
+import { AgentGroup } from './agents';
 
 export default class Simulation {
   constructor() {
-    this.agents = [];
+    this.agentGroups = [];
   }
 
-  static run() {
+  run() { // eslint-disable-line class-methods-use-this
     // init ganache here
 
     // deploy smart contract to ganache
 
     // create TCR connection
 
+    // set AgentGroups addresses
+
     return new Promise(resolve => setTimeout(resolve, 100));
   }
 
-  addAgentGroup(agentType, behaviors, count) { // eslint-disable-line
-    for (let i = 0; i < count; i++) {
-      let agent;
-      switch (agentType) {
-        case AgentType.MAINTAINER:
-          agent = new Maintainer();
-          break;
-        case AgentType.CONTRIBUTOR:
-          agent = new Contributor();
-          break;
-        case AgentType.USER:
-          agent = new User();
-          break;
-        default:
-          throw TypeError(`Unrecognized agent type "${agentType}"`);
-      }
-      this.agents.push(agent);
-    }
+  addAgentGroup(agentType, behaviors, population) {
+    const newGroup = new AgentGroup(agentType, behaviors, population);
+    this.agentGroups.push(newGroup);
   }
 }

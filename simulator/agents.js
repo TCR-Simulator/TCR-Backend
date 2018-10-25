@@ -4,26 +4,25 @@ export const AgentType = {
   USER: 'user',
 };
 
-class Agent {
-  get [Symbol.toStringTag]() { // eslint-disable-line class-methods-use-this
-    return 'Agent';
-  }
+function agentTypeExists(type) {
+  return Object.values(AgentType).includes(type);
 }
 
-export class Maintainer extends Agent {
-  get [Symbol.toStringTag]() { // eslint-disable-line class-methods-use-this
-    return 'Maintainer';
-  }
-}
+export class AgentGroup {
+  constructor(type, behaviors, population) {
+    if (!agentTypeExists(type)) {
+      throw new TypeError(`Unrecognized agent type ${type}`);
+    }
 
-export class Contributor extends Agent {
-  get [Symbol.toStringTag]() { // eslint-disable-line class-methods-use-this
-    return 'Contributor';
+    this.type = type;
+    this.behaviors = behaviors;
+    this.population = population;
   }
-}
 
-export class User extends Agent {
-  get [Symbol.toStringTag]() { // eslint-disable-line class-methods-use-this
-    return 'User';
+  setAddresses(newAddresses) {
+    if (newAddresses.length !== this.population) {
+      throw new TypeError('Length of addresses array must be equal to population');
+    }
+    this.addresses = newAddresses;
   }
 }
