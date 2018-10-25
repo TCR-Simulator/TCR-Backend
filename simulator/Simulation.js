@@ -60,8 +60,6 @@ export default class Simulation {
     const smartContracrAddr = deploySmartContract(port, getMechanismsParam());
     this.tcrConnection = new TcrConnection(getPort(), smartContracrAddr, getContractAbi());
 
-    // set AgentGroups addresses
-
     return new Promise(resolve => setTimeout(resolve, 100));
   }
 
@@ -73,21 +71,25 @@ export default class Simulation {
   createAccounts(agentsLength) {
     const accounts = [];
     for (let i = 0; i < agentsLength; i++) {
-      const accountAddr = randomValueHex(12);
-      this.agents[i].accountAddr = accountAddr;
+      const addresses = [];
       let balance = 0;
-      if (this.agents[i] instanceof Maintainer) {
+      if (this.agents[i].type === 'maintainer') {
         balance = defaultBalance.Maintainer;
-      } else if (this.agents[i] instanceof Contributor) {
+      } else if (this.agents[i].type === 'contributor') {
         balance = defaultBalance.Contributor;
       } else {
         balance = defaultBalance.Consumer;
       }
-      const account = {
-        balance,
-        secretKey: accountAddr,
-      };
-      accounts.push(account);
+      for (let j = 0; j < this.agents[i].population; j++) {
+        const accountAddr = randomValueHex(12);
+        addresses.push(accountAddr);
+        const account = {
+          balance,
+          secretKey: accountAddr,
+        };
+        accounts.push(account);
+      }
+      this.agents[i].setAddresses(addresses);
     }
     return accounts;
   }
