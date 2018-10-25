@@ -2,10 +2,17 @@ import { AgentType, Maintainer, Contributor, User } from './agents';
 import TcrConnection from './TcrConnection';
 
 const Ganache = require('ganache-core');
+const crypto = require('crypto');
 
 const basePort = 7000;
 const highestPort = 8000;
 let currentPort = basePort;
+
+const defaultBalance = {
+  Maintainer: 500,
+  Contributor: 300,
+  Consumer: 200,
+};
 
 function getPort() {
   if (currentPort < highestPort) {
@@ -18,6 +25,13 @@ function getPort() {
 // function restoreCurrentPort() {
 //   currentPort = basePort;
 // }
+
+function randomValueHex(len) {
+  return crypto
+    .randomBytes(Math.ceil(len / 2))
+    .toString('hex') // convert to hexadecimal format
+    .slice(0, len); // return required number of characters
+}
 
 function getContractAbi() {}
 
@@ -34,6 +48,7 @@ export default class Simulation {
     const port = Simulation.getPort();
     // Remember to restore the current port number when all simulations are done.
     const serverObj = {
+      accounts: this.createAccounts(this.agents.length),
       port,
     };
     this.server = Ganache.server(serverObj);
@@ -66,5 +81,27 @@ export default class Simulation {
       }
       this.agents.push(agent);
     }
+  }
+
+  createAccounts(agentsLength) {
+    const accounts = [];
+    for (let i = 0; i < agentsLength; i++) {
+      const accountAddr = randomValueHex(12);
+      this.agents[i].accountAddr = accountAddr;
+      let balance = 0;
+      if (this.agents[i] instanceof Maintainer) {
+        balance = defaultBalance.Maintainer;
+      } else if (this.agents[i] instanceof Contributor) {
+        balance = defaultBalance.Contributor;
+      } else {
+        balance = defaultBalance.Consumer;
+      }
+      const account = {
+        balance,
+        secretKey: accountAddr,
+      };
+      accounts.push(account);
+    }
+    return accounts;
   }
 }
