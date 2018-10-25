@@ -1,4 +1,29 @@
 import { AgentGroup } from './agents';
+import TcrConnection from './TcrConnection';
+
+const Ganache = require('ganache-core');
+
+const basePort = 7000;
+const highestPort = 8000;
+let currentPort = basePort;
+
+function getPort() {
+  if (currentPort < highestPort) {
+    currentPort++;
+    return currentPort;
+  }
+  return null;
+}
+
+// function restoreCurrentPort() {
+//   currentPort = basePort;
+// }
+
+function getContractAbi() {}
+
+function getMechanismsParam() {}
+
+function deploySmartContract() {}
 
 export default class Simulation {
   constructor() {
@@ -6,11 +31,19 @@ export default class Simulation {
   }
 
   run() { // eslint-disable-line class-methods-use-this
-    // init ganache here
-
-    // deploy smart contract to ganache
-
-    // create TCR connection
+    const port = Simulation.getPort();
+    // Remember to restore the current port number when all simulations are done.
+    const serverObj = {
+      port,
+    };
+    this.server = Ganache.server(serverObj);
+    this.server.listen(port, (err) => {
+      if (err) {
+        throw new Error(err.toString());
+      }
+    });
+    const smartContracrAddr = deploySmartContract(port, getMechanismsParam());
+    this.tcrConnection = new TcrConnection(getPort(), smartContracrAddr, getContractAbi());
 
     // set AgentGroups addresses
 
