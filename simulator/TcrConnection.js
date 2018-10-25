@@ -1,6 +1,15 @@
 const Web3 = require('web3');
 
+const results = [];
 const contractAbi = [];
+
+const callback = function callback(error, result) {
+  if (error) {
+    throw new Error(error.toString());
+  } else {
+    results.push(result);
+  }
+};
 
 export default class TcrConnection {
   contructor(portNum, contractAddr) {
@@ -15,15 +24,22 @@ export default class TcrConnection {
     }
   }
 
-  submit(initiator, submissionQuality) {
-    this.contract.submit.call(initiator, submissionQuality);
+  submit(initiator, submissionQuality, submissionFrequency) {
+    this.contract.submit.call(initiator, submissionQuality, submissionFrequency, callback);
   }
 
   vote(initiator, submission, accept) {
-    this.contract.vote.call(initiator, submission, accept);
+    this.contract.vote.call(initiator, submission, accept, callback);
   }
 
   getPendingList() {
     return this.contract.getPendingList.call();
+  }
+
+  getBalance(address) {
+    if (this.web3.isAddress(address)) {
+      return this.web3.eth.getBalance(address);
+    }
+    return null;
   }
 }
