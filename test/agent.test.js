@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import Agent from '../simulator/Agent';
+import Agent from '../simulator/agents';
 
 describe('Agent', () => {
   let agent = null;
