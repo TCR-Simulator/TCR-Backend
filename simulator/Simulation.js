@@ -1,4 +1,4 @@
-import { AgentGroup } from './agents';
+import { AgentType, AgentGroup } from './agents';
 import TcrConnection from './TcrConnection';
 
 const Ganache = require('ganache-core');
@@ -9,9 +9,9 @@ const highestPort = 8000;
 let currentPort = basePort;
 
 const defaultBalance = {
-  Maintainer: 500,
-  Contributor: 300,
-  Consumer: 200,
+  [AgentType.MAINTAINER]: 500,
+  [AgentType.CONTRIBUTOR]: 300,
+  [AgentType.USER]: 200,
 };
 
 function getPort() {
@@ -47,7 +47,7 @@ export default class Simulation {
   run() { // eslint-disable-line class-methods-use-this
     const port = getPort();
     const serverObj = {
-      accounts: this.createAccounts(this.agents.length),
+      accounts: this.createAccounts(),
       port,
     };
     this.server = Ganache.server(serverObj);
@@ -71,28 +71,21 @@ export default class Simulation {
     this.agentGroups.push(newGroup);
   }
 
-  createAccounts(agentsLength) {
+  createAccounts() {
     const accounts = [];
-    for (let i = 0; i < agentsLength; i++) {
+    for (let i = 0; i < this.agentGroups.length; i++) {
       const addresses = [];
-      let balance = 0;
-      if (this.agents[i].type === 'maintainer') {
-        balance = defaultBalance.Maintainer;
-      } else if (this.agents[i].type === 'contributor') {
-        balance = defaultBalance.Contributor;
-      } else {
-        balance = defaultBalance.Consumer;
-      }
-      for (let j = 0; j < this.agents[i].population; j++) {
-        const accountAddr = randomValueHex(12);
-        addresses.push(accountAddr);
+      const balance = defaultBalance[this.agentGroups[i].type];
+      for (let j = 0; j < this.agentGroups[i].population; j++) {
+        const secretKey = `0x${randomValueHex(64)}`;
+        addresses.push(secretKey);
         const account = {
           balance,
-          secretKey: accountAddr,
+          secretKey,
         };
         accounts.push(account);
       }
-      this.agents[i].setAddresses(addresses);
+      this.agentGroups[i].setAddresses(addresses);
     }
     return accounts;
   }
