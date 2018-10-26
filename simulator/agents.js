@@ -1,4 +1,10 @@
-import { sleep, randomInRange, randomIntInRange, isValidAddress } from './utils';
+import {
+  sleep,
+  randomInRange,
+  randomIntInRange,
+  privateToAddressHex,
+  generateSecretKey,
+} from './utils';
 import { SubmitAction, VoteAction } from './actions';
 
 export const AgentType = {
@@ -11,6 +17,13 @@ function agentTypeExists(type) {
   return Object.values(AgentType).includes(type);
 }
 
+class Agent {
+  constructor(secretKey) {
+    this.secretKey = secretKey || generateSecretKey();
+    this.address = privateToAddressHex(this.secretKey);
+  }
+}
+
 export class AgentGroup {
   constructor(type, behaviors, population) {
     if (!agentTypeExists(type)) {
@@ -19,23 +32,11 @@ export class AgentGroup {
 
     this.type = type;
     this.behaviors = behaviors;
-    this.population = population;
+    this.agents = Array(population).fill().map(() => new Agent());
   }
 
-  setAddresses(addresses) {
-    if (addresses.length !== this.population) {
-      throw new TypeError('Length of addresses array must be equal to population');
-    }
-
-    if (addresses.some(address => !isValidAddress(address))) {
-      throw new TypeError('All addresses must start with 0x and be 42 chars long');
-    }
-
-    if ((new Set(addresses)).size !== addresses.length) {
-      throw new TypeError('Addresses cannot contain duplicates');
-    }
-
-    this.addresses = addresses;
+  get population() {
+    return this.agents.length;
   }
 
   generateAction(tcrConnection, initiator) {

@@ -3,39 +3,18 @@ import { expect } from 'chai';
 import { AgentType, AgentGroup } from '../simulator/agents';
 
 describe('AgentGroup', () => {
-  it('can allow setting of wallet addresses', () => {
+  it('initializes with a specified population of agents', () => {
     const agentGroup = new AgentGroup(AgentType.MAINTAINER, {}, 5);
-    agentGroup.setAddresses([
-      '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
-      '0xu5idofzm5sskl5w8r5g8ritxbo1b7vp21wlsg90g',
-      '0xfsnsapwmgb91pekd5mpl2f3vqrpq9kp20xrjotmb',
-      '0xu6i0nm5zukb2mekjlp7ttfjbwt6gha0u8wnbp7da',
-      '0xf27j31b1k3j7kfiu551fsbp74wug7wh4ybza0wy6',
-    ]);
+    const { agents } = agentGroup;
+
+    expect(agentGroup.population).to.equal(5);
+    expect(agents.length).to.equal(5);
   });
 
-  it('does not allow adding invalid wallet addresses', () => {
-    const attempt = addresses => () => {
-      const agentGroup = new AgentGroup(AgentType.MAINTAINER, {}, addresses.length);
-      agentGroup.setAddresses(addresses);
+  it('does not allow unrecognized agent types', () => {
+    const attempt = agentType => () => {
+      const agentGroup = new AgentGroup(agentType, {}, 5); // eslint-disable-line no-unused-vars
     };
-
-    expect(attempt(['BAD ADDRESS'])).to.throw(TypeError);
-    expect(attempt(['6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo'])).to.throw(TypeError);
-  });
-
-  it('does not allow adding duplicate wallet addresses', () => {
-    const attempt = addresses => () => {
-      const agentGroup = new AgentGroup(AgentType.MAINTAINER, {}, addresses.length);
-      agentGroup.setAddresses(addresses);
-    };
-
-    const duplicate = [
-      '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
-      '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
-      '0xu6i0nm5zukb2mekjlp7ttfjbwt6gha0u8wnbp7da',
-      '0x6ragqoahkxk07vls942xqzmnapjyjnrgmg6d4ujo',
-    ];
-    expect(attempt(duplicate)).to.throw(TypeError, 'duplicate');
+    expect(attempt('Agent007')).to.throw(TypeError);
   });
 });

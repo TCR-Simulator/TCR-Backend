@@ -1,9 +1,7 @@
 import { AgentType, AgentGroup } from './agents';
 import TcrConnection from './TcrConnection';
-import { privateToAddressHex } from './utils';
 
 const Ganache = require('ganache-core');
-const crypto = require('crypto');
 
 const basePort = 7000;
 const highestPort = 8000;
@@ -25,13 +23,6 @@ function getPort() {
 
 function restoreCurrentPort() {
   currentPort = basePort;
-}
-
-function randomValueHex(len) {
-  return crypto
-    .randomBytes(Math.ceil(len / 2))
-    .toString('hex') // convert to hexadecimal format
-    .slice(0, len); // return required number of characters
 }
 
 function getContractAbi() {}
@@ -82,22 +73,15 @@ export default class Simulation {
   }
 
   createAccounts() {
-    const accounts = [];
-    for (let i = 0; i < this.agentGroups.length; i++) {
-      const addresses = [];
-      const balance = defaultBalance[this.agentGroups[i].type];
-      for (let j = 0; j < this.agentGroups[i].population; j++) {
-        const secretKey = `0x${randomValueHex(64)}`;
-        addresses.push(privateToAddressHex(secretKey));
-        const account = {
+    return [].concat(
+      this.agentGroups.map((agentGroup) => {
+        const balance = defaultBalance[agentGroup.type];
+        return agentGroup.agents.map(agent => ({
           balance,
-          secretKey,
-        };
-        accounts.push(account);
-      }
-      this.agentGroups[i].setAddresses(addresses);
-    }
-    return accounts;
+          secretKey: agent.secretKey,
+        }));
+      }),
+    );
   }
 
   /**

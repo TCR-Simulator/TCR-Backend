@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
 
 export async function sleep(milliseconds) { // eslint-disable-line import/prefer-default-export
@@ -12,8 +13,19 @@ export function randomIntInRange(start, end) {
   return Math.floor(randomInRange(start, end));
 }
 
+export function randomValueHex(len) {
+  return crypto
+    .randomBytes(Math.ceil(len / 2))
+    .toString('hex') // convert to hexadecimal format
+    .slice(0, len); // return required number of characters
+}
+
 export function isValidAddress(address) {
   return address.length === 42 && address.startsWith('0x');
+}
+
+export function generateSecretKey() {
+  return `0x${randomValueHex(64)}`;
 }
 
 /**
