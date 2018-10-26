@@ -40,6 +40,9 @@ function getMechanismsParam() {}
 
 function deploySmartContract() {}
 
+/**
+ * @class
+ */
 export default class Simulation {
   constructor() {
     this.agentGroups = [];

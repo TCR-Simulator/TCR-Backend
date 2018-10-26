@@ -14,6 +14,9 @@ function portToAddr(port) {
   return `http://localhost:${port}`;
 }
 
+/**
+ * @class
+ */
 export default class TcrConnection {
   constructor(portNum, contractAddr, contractAbi) { // eslint-disable-line no-unused-vars
     this.web3 = new Web3(new Web3.providers.HttpProvider(portToAddr(portNum)));

@@ -7,7 +7,10 @@
     "lint": "eslint .",
     "pretest": "eslint .",
     "test": "mocha --require @babel/register --require @babel/polyfill",
-    "start": "node --require @babel/register --require @babel/polyfill app.js"
+    "start": "node --require @babel/register --require @babel/polyfill app.js",
+    "docs:readme": "documentation readme simulator/** --section=\"API Reference\"",
+    "docs:serve": "documentation serve --watch simulator/**",
+    "docs:lint": "documentation lint simulator/**"
   },
   "repository": {
     "type": "git",
@@ -32,6 +35,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "documentation": "^9.0.0-alpha.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",

@@ -1,3 +1,7 @@
+/**
+ * This module contains some utility functions.
+ * @module utils
+ */
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
 
 export async function sleep(milliseconds) { // eslint-disable-line import/prefer-default-export
@@ -18,6 +22,7 @@ export function isValidAddress(address) {
 
 /**
  * Converts a private key to its corresponding address.
+ * @memberof utils
  * @param  {string} privateKey - The given private key as a hex string i.e. '0x...'
  * @return {string} Ethereum address of the private key, as a hex string i.e. '0x...'
  */
