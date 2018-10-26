@@ -11,6 +11,9 @@ describe('Simulation', () => {
   });
 
   it('can run and return a result asynchronously', async () => {
+    simulation.addAgentGroup(AgentType.MAINTAINER, { acceptanceLikelihood: 0.5 }, 10);
+    simulation.addAgentGroup(AgentType.CONTRIBUTOR, { submissionQuality: 0.5 }, 20);
+
     await simulation.run();
   });
 
