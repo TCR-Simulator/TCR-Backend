@@ -1,5 +1,6 @@
 import { AgentType, AgentGroup } from './agents';
 import TcrConnection from './TcrConnection';
+import { privateToAddressHex } from './utils';
 
 const Ganache = require('ganache-core');
 const crypto = require('crypto');
@@ -78,7 +79,7 @@ export default class Simulation {
       const balance = defaultBalance[this.agentGroups[i].type];
       for (let j = 0; j < this.agentGroups[i].population; j++) {
         const secretKey = `0x${randomValueHex(64)}`;
-        addresses.push(secretKey);
+        addresses.push(privateToAddressHex(secretKey));
         const account = {
           balance,
           secretKey,
