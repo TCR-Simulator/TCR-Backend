@@ -15,7 +15,7 @@ function portToAddr(port) {
 }
 
 export default class TcrConnection {
-  contructor(portNum, contractAddr, contractAbi) {
+  constructor(portNum, contractAddr, contractAbi) {
     this.web3 = new Web3(new Web3(new Web3.providers.HttpProvider(portToAddr(portNum))));
     if (this.web3.isConnected()) {
       if (!this.web3.isAddress(contractAddr)) {
