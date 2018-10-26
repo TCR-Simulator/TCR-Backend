@@ -99,4 +99,17 @@ export default class Simulation {
     }
     return accounts;
   }
+
+  /**
+   * Get the balance of an agent.
+   * @param  {string} address - Address of the agent to get the balance of, with the format '0x...'
+   * @return {number} Balance of the agent in wei.
+   */
+  getAgentBalance(address) {
+    if (!this.server || !this.tcrConnection) {
+      throw new Error('.init() must be called before .getAgentBalance() can be called');
+    }
+
+    return this.tcrConnection.getBalance(address);
+  }
 }

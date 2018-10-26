@@ -63,9 +63,9 @@ describe('Simulation', () => {
       simulation.init();
     });
 
-    it('can get the balance in an agent\'s account', () => {
-      const address = '0x0000000000000000000000000000000000000000';
-      const balance = simulation.getAgentBalance(address);
+    it('can get the balance in an agent\'s account', async () => {
+      const address = simulation.agentGroups[0].addresses[0];
+      const balance = await simulation.getAgentBalance(address);
       expect(balance).to.be.a('number');
       expect(balance).to.be.at.least(0);
     });

@@ -15,16 +15,15 @@ function portToAddr(port) {
 }
 
 export default class TcrConnection {
-  constructor(portNum, contractAddr, contractAbi) {
-    this.web3 = new Web3(new Web3(new Web3.providers.HttpProvider(portToAddr(portNum))));
-    if (this.web3.isConnected()) {
-      if (!this.web3.isAddress(contractAddr)) {
-        throw new Error('Invalid contract address');
+  constructor(portNum, contractAddr, contractAbi) { // eslint-disable-line no-unused-vars
+    this.web3 = new Web3(new Web3.providers.HttpProvider(portToAddr(portNum)));
+    this.web3.eth.net.isListening(() => {
+      // TODO: uncomment when ready to integrate with deployed contracts.
+      if (!this.web3.utils.isAddress(contractAddr)) {
+        // throw new Error('Invalid contract address');
       }
-      this.contract = this.web3.eth.contract(contractAbi).at(contractAddr);
-    } else {
-      throw new Error('Web3 connection has failed.');
-    }
+      // this.contract = this.web3.eth.contract(contractAbi).at(contractAddr);
+    });
   }
 
   submit(initiator, submissionQuality, submissionFrequency) {
@@ -39,10 +38,16 @@ export default class TcrConnection {
     return this.contract.getPendingList.call();
   }
 
-  getBalance(address) {
-    if (this.web3.isAddress(address)) {
-      return this.web3.eth.getBalance(address);
+  /**
+   * Get the balance of an address.
+   * @param  {string} address - Address to get the balance of, with the format '0x...'
+   * @return {number} Balance of the address in wei.
+   */
+  async getBalance(address) {
+    if (!this.web3.utils.isAddress(address)) {
+      throw new Error('Invalid address');
     }
-    return null;
+    const balance = await this.web3.eth.getBalance(address);
+    return Number(balance);
   }
 }
