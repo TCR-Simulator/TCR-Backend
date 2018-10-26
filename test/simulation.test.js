@@ -10,11 +10,18 @@ describe('Simulation', () => {
     simulation = new Simulation();
   });
 
+  it('cannot be run without calling .init() before', () => {
+    const attempt = () => simulation.run();
+    expect(attempt).to.throw(Error);
+  });
+
   it('can run and return a result asynchronously', async () => {
     simulation.addAgentGroup(AgentType.MAINTAINER, { acceptanceLikelihood: 0.5 }, 10);
     simulation.addAgentGroup(AgentType.CONTRIBUTOR, { submissionQuality: 0.5 }, 20);
 
-    await simulation.run();
+    simulation.init();
+    simulation.run();
+    simulation.stop();
   });
 
   it('has no agents on creation', () => {
@@ -49,9 +56,11 @@ describe('Simulation', () => {
   });
 
   describe('Agents in submission', () => {
-    before(() => {
+    beforeEach(() => {
+      simulation = new Simulation();
       simulation.addAgentGroup(AgentType.MAINTAINER, { acceptanceLikelihood: 0.5 }, 10);
       simulation.addAgentGroup(AgentType.CONTRIBUTOR, { submissionQuality: 0.5 }, 20);
+      simulation.init();
     });
 
     it('can get the balance in an agent\'s account', () => {
@@ -59,6 +68,10 @@ describe('Simulation', () => {
       const balance = simulation.getAgentBalance(address);
       expect(balance).to.be.a('number');
       expect(balance).to.be.at.least(0);
+    });
+
+    afterEach(() => {
+      simulation.stop();
     });
   });
 });

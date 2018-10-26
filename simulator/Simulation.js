@@ -45,7 +45,7 @@ export default class Simulation {
     this.agentGroups = [];
   }
 
-  run() { // eslint-disable-line class-methods-use-this
+  init() {
     const port = getPort();
     const serverObj = {
       accounts: this.createAccounts(),
@@ -58,13 +58,22 @@ export default class Simulation {
       }
     });
     const smartContracrAddr = deploySmartContract(port, getMechanismsParam());
-    this.tcrConnection = new TcrConnection(getPort(), smartContracrAddr, getContractAbi());
+    this.tcrConnection = new TcrConnection(port, smartContracrAddr, getContractAbi());
+  }
+
+  run() {
+    if (!this.server || !this.tcrConnection) {
+      throw new Error('.init() must be called before .run() can be called');
+    }
 
     // Do stuff here
+  }
 
-    // Clean-up code
-    this.server.close();
-    restoreCurrentPort();
+  stop() {
+    if (this.server) {
+      this.server.close();
+      restoreCurrentPort();
+    }
   }
 
   addAgentGroup(agentType, behaviors, population) {
