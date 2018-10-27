@@ -35,6 +35,23 @@ describe('Agent group creation', () => {
       maintainers = createAgentGroup(AgentType.MAINTAINER, {}, 1);
     });
 
+    it('only allows these behaviors: frequency, acceptanceLikelihood', () => {
+      const validBehaviors = {
+        frequency: 10,
+        acceptanceLikelihood: 0.8,
+      };
+      const invalidBehaviors = {
+        ...validBehaviors,
+        badBehavior1: 123,
+        badBehavior2: 999,
+      };
+
+      const attempt = behaviors => () => createAgentGroup(AgentType.MAINTAINER, behaviors, 1);
+      expect(attempt(validBehaviors)).to.not.throw();
+      expect(attempt(invalidBehaviors)).to.throw(Error, /badBehavior1/);
+      expect(attempt(invalidBehaviors)).to.throw(Error, /badBehavior2/);
+    });
+
     it('generates SubmitAction\'s', () => {
       const action = maintainers.generateAction();
       expect(action).to.be.a('VoteAction');
@@ -48,6 +65,23 @@ describe('Agent group creation', () => {
       contributors = createAgentGroup(AgentType.CONTRIBUTOR, {}, 1);
     });
 
+    it('only allows these behaviors: frequency, submissionQuality', () => {
+      const validBehaviors = {
+        frequency: 10,
+        submissionQuality: 0.5,
+      };
+      const invalidBehaviors = {
+        ...validBehaviors,
+        badBehavior1: 123,
+        badBehavior2: 999,
+      };
+
+      const attempt = behaviors => () => createAgentGroup(AgentType.CONTRIBUTOR, behaviors, 1);
+      expect(attempt(validBehaviors)).to.not.throw();
+      expect(attempt(invalidBehaviors)).to.throw(Error, /badBehavior1/);
+      expect(attempt(invalidBehaviors)).to.throw(Error, /badBehavior2/);
+    });
+
     it('generates SubmitAction\'s', () => {
       const action = contributors.generateAction();
       expect(action).to.be.a('SubmitAction');
@@ -59,6 +93,20 @@ describe('Agent group creation', () => {
 
     beforeEach(() => {
       users = createAgentGroup(AgentType.USER, {}, 1);
+    });
+
+    it('does not allow any behaviors', () => {
+      const validBehaviors = {};
+      const invalidBehaviors = {
+        ...validBehaviors,
+        badBehavior1: 123,
+        badBehavior2: 999,
+      };
+
+      const attempt = behaviors => () => createAgentGroup(AgentType.USER, behaviors, 1);
+      expect(attempt(validBehaviors)).to.not.throw();
+      expect(attempt(invalidBehaviors)).to.throw(Error, /badBehavior1/);
+      expect(attempt(invalidBehaviors)).to.throw(Error, /badBehavior2/);
     });
 
     it('does not generate any kind of actions', () => {

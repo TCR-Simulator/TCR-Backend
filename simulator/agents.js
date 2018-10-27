@@ -22,6 +22,7 @@ class Agent {
 
 class AgentGroup {
   constructor(behaviors, population) {
+    this._behaviors = {};
     this.behaviors = behaviors;
     this.agents = Array(population).fill().map(() => new Agent());
   }
@@ -30,12 +31,31 @@ class AgentGroup {
     return 'AgentGroup';
   }
 
-  static get ALLOWED_BEHAVIORS() {
+  get ALLOWED_BEHAVIORS() { // eslint-disable-line class-methods-use-this
     return [];
   }
 
   get population() {
     return this.agents.length;
+  }
+
+  get behaviors() {
+    return this._behaviors;
+  }
+
+  set behaviors(newBehaviors) {
+    const invalidBehaviors = Object.keys(newBehaviors).filter(b => !this.isBehaviorAllowed(b));
+    if (invalidBehaviors.length > 0) {
+      throw new Error((
+        `Behavior(s) ${invalidBehaviors.join(', ')} are not allowed.`
+        + `The only allowed behaviors of ${typeof this} are: ${this.ALLOWED_BEHAVIORS.join(', ')}`
+      ));
+    }
+    this._behaviors = newBehaviors;
+  }
+
+  isBehaviorAllowed(behavior) {
+    return this.ALLOWED_BEHAVIORS.includes(behavior);
   }
 
   generateAction() { // eslint-disable-line class-methods-use-this
@@ -65,8 +85,8 @@ export class MaintainerGroup extends AgentGroup {
     return 'MaintainerGroup';
   }
 
-  static get ALLOWED_BEHAVIORS() {
-    return ['frequency'];
+  get ALLOWED_BEHAVIORS() { // eslint-disable-line class-methods-use-this
+    return ['frequency', 'acceptanceLikelihood'];
   }
 
   generateAction(tcrConnection, initiator) { // eslint-disable-line class-methods-use-this
@@ -81,7 +101,7 @@ export class ContributorGroup extends AgentGroup {
     return 'ContributorGroup';
   }
 
-  static get ALLOWED_BEHAVIORS() {
+  get ALLOWED_BEHAVIORS() { // eslint-disable-line class-methods-use-this
     return ['submissionQuality', 'frequency'];
   }
 
