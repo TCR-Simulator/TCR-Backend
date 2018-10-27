@@ -14,9 +14,7 @@ describe('Agent group creation', () => {
   });
 
   it('does not allow unrecognized agent types', () => {
-    const attempt = agentType => () => {
-      const agentGroup = createAgentGroup(agentType, {}, 5); // eslint-disable-line no-unused-vars
-    };
+    const attempt = agentType => () => createAgentGroup(agentType, {}, 5);
     expect(attempt('Agent007')).to.throw(TypeError);
   });
 
