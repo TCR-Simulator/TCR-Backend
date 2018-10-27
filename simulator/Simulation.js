@@ -1,4 +1,4 @@
-import { AgentType, AgentGroup } from './agents';
+import { AgentType, createAgentGroup } from './agents';
 import TcrConnection from './TcrConnection';
 
 const Ganache = require('ganache-core');
@@ -68,7 +68,7 @@ export default class Simulation {
   }
 
   addAgentGroup(agentType, behaviors, population) {
-    const newGroup = new AgentGroup(agentType, behaviors, population);
+    const newGroup = createAgentGroup(agentType, behaviors, population);
     this.agentGroups.push(newGroup);
   }
 

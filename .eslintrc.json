@@ -2,6 +2,7 @@
   "extends": "airbnb-base",
   "rules": {
     "no-plusplus": "off",
+    "no-use-before-define": ["error", {"classes": false, "functions": false}],
     "object-curly-newline": ["error", { "consistent": true, "minProperties": 5 }]
   },
   "env": {
