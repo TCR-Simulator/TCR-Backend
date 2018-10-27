@@ -64,7 +64,7 @@ export class AgentGroup {
 
       // Pick a random agent
       const agentIndex = randomIntInRange(0, this.population);
-      const agentAddress = this.addresses[agentIndex];
+      const { address: agentAddress } = this.agents[agentIndex];
 
       // Generate random action
       const action = this.generateAction(tcrConnection, agentAddress);
