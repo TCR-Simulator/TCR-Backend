@@ -72,7 +72,7 @@ export class MaintainerGroup extends AgentGroup {
   generateAction(tcrConnection, initiator) { // eslint-disable-line class-methods-use-this
     const submission = null; // TODO: pick a pending submission
     const accept = true; // TODO: change this based on agent behavior
-    return VoteAction(tcrConnection, initiator, submission, accept);
+    return new VoteAction(tcrConnection, initiator, submission, accept);
   }
 }
 
@@ -87,7 +87,7 @@ export class ContributorGroup extends AgentGroup {
 
   generateAction(tcrConnection, initiator) { // eslint-disable-line class-methods-use-this
     const submissionQuality = 0.5; // TODO: change this based on agent behavior
-    return SubmitAction(tcrConnection, initiator, submissionQuality);
+    return new SubmitAction(tcrConnection, initiator, submissionQuality);
   }
 }
 

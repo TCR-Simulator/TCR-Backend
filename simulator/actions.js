@@ -16,6 +16,10 @@ export class SubmitAction extends TcrAction {
     this.submissionQuality = submissionQuality;
   }
 
+  get [Symbol.toStringTag]() { // eslint-disable-line class-methods-use-this
+    return 'SubmitAction';
+  }
+
   execute() {
     this.tcrConnection.submit(this.initiator, this.submissionQuality);
   }
@@ -26,6 +30,10 @@ export class VoteAction extends TcrAction {
     super(tcrConnection, initiator);
     this.submission = submission;
     this.accept = accept;
+  }
+
+  get [Symbol.toStringTag]() { // eslint-disable-line class-methods-use-this
+    return 'VoteAction';
   }
 
   execute() {

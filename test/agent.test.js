@@ -27,4 +27,43 @@ describe('Agent group creation', () => {
     expect(agentGroup.population).to.equal(5);
     expect(agents.length).to.equal(5);
   });
+
+  describe('MaintainerGroup', () => {
+    let maintainers = null;
+
+    beforeEach(() => {
+      maintainers = createAgentGroup(AgentType.MAINTAINER, {}, 1);
+    });
+
+    it('generates SubmitAction\'s', () => {
+      const action = maintainers.generateAction();
+      expect(action).to.be.a('VoteAction');
+    });
+  });
+
+  describe('ContributorGroup', () => {
+    let contributors = null;
+
+    beforeEach(() => {
+      contributors = createAgentGroup(AgentType.CONTRIBUTOR, {}, 1);
+    });
+
+    it('generates SubmitAction\'s', () => {
+      const action = contributors.generateAction();
+      expect(action).to.be.a('SubmitAction');
+    });
+  });
+
+  describe('UserGroup', () => {
+    let users = null;
+
+    beforeEach(() => {
+      users = createAgentGroup(AgentType.USER, {}, 1);
+    });
+
+    it('does not generate any kind of actions', () => {
+      const action = users.generateAction();
+      expect(action).to.be.null; // eslint-disable-line no-unused-expressions
+    });
+  });
 });
